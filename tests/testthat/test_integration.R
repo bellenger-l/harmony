@@ -70,7 +70,8 @@ test_that('error messages work', {
 test_that('dims.use is working', {
     res <- RunHarmony(pbmc_small,
                       group.by.vars = "groups",
-                      dims.use = 1:10)
+                      dims.use = 1:10,
+                      project.dim = FALSE)
     expect_equal(
         ncol(res[['harmony']]),
         10
