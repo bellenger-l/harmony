@@ -84,7 +84,7 @@ test_that('dims.use is working on SingleCellExperiment', {
                       dims.use = 1:10,
                       project.dim = FALSE)
     expect_equal(
-        ncol(res[['harmony']]),
+        ncol(res@reducedDims[['HARMONY']]),
         10
     )
 })
