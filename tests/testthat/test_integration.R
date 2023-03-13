@@ -1,6 +1,8 @@
 context('Test main Harmony integration function: HarmonyMatrix')
 library(harmony)
+library(SeuratObject)
 data(cell_lines_small)
+data(pbmc_small)
 
 obj <- HarmonyMatrix(cell_lines_small$scaled_pcs, cell_lines_small$meta_data, 
                      theta = 1, nclust = 50, lambda = .1,
@@ -62,5 +64,14 @@ test_that('error messages work', {
         HarmonyMatrix(cell_lines_small$scaled_pcs, 
                       head(cell_lines_small$meta_data, -1), 'dataset', 
                       do_pca = FALSE)
+    )
+})
+
+test_that('dims.use is working', {
+    res <- RunHarmony(pbmc_small,
+                      dims.use = 1:10)
+    expect_equal(
+        ncol(res[['harmony']]),
+        10
     )
 })
