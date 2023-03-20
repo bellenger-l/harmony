@@ -1,6 +1,8 @@
 context('Test main Harmony integration function: HarmonyMatrix')
 library(harmony)
 data(cell_lines_small)
+data(cell_lines_small_seurat_v3)
+data(cell_lines_small_sce)
 
 obj <- HarmonyMatrix(cell_lines_small$scaled_pcs, cell_lines_small$meta_data, 
                      theta = 1, nclust = 50, lambda = .1,
@@ -62,5 +64,27 @@ test_that('error messages work', {
         HarmonyMatrix(cell_lines_small$scaled_pcs, 
                       head(cell_lines_small$meta_data, -1), 'dataset', 
                       do_pca = FALSE)
+    )
+})
+
+test_that('dims.use is working on SeuratObject', {
+    res <- RunHarmony(cell_lines_small_seurat_v3,
+                      group.by.vars = "dataset",
+                      dims.use = 1:10,
+                      project.dim = FALSE)
+    expect_equal(
+        ncol(res[['harmony']]),
+        10
+    )
+})
+
+test_that('dims.use is working on SingleCellExperiment', {
+    res <- RunHarmony(cell_lines_small_sce,
+                      group.by.vars = "dataset",
+                      dims.use = 1:10,
+                      project.dim = FALSE)
+    expect_equal(
+        ncol(res@int_colData@listData$reducedDims@listData[["HARMONY"]]),
+        10
     )
 })
